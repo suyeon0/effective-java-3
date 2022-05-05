@@ -28,7 +28,7 @@ public void weakHashMap_test() {
 }
 ```
 
-###질문
+### 질문
 
 WeakHashMap 은 WeakReference 을 사용했기 때문에
 객체 참조가 끊어지면 ( = null 로 만들면 ) 바로 gc 대상이 된다는 걸 배웠다.
