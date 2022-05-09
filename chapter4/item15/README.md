@@ -1,6 +1,6 @@
 `클래스와 인터페이스 (4장)`
 
-#[ITEM15] 클래스와 멤버의 접근 권한을 최소화하라
+# [ITEM15] 클래스와 멤버의 접근 권한을 최소화하라
 
 ----
 ## 1. 가변객체를 참조하는 Public static final 필드
@@ -106,7 +106,7 @@ list.add(new SampleVO());
 System.out.println("readOnlyList.size() : " + readOnlyList.size()); // 2
 ```
 ### 참고
-[UnmodifiableList은 만능이 아니다] (https://ecsimsw.tistory.com/entry/unmodifiableList%EC%9D%80-%EB%A7%8C%EB%8A%A5%EC%9D%B4-%EC%95%84%EB%8B%88%EB%8B%A4)
+[UnmodifiableList은 만능이 아니다](https://ecsimsw.tistory.com/entry/unmodifiableList%EC%9D%80-%EB%A7%8C%EB%8A%A5%EC%9D%B4-%EC%95%84%EB%8B%88%EB%8B%A4)
 ###
 
 ----
