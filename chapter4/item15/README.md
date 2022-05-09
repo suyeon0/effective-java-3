@@ -106,7 +106,7 @@ list.add(new SampleVO());
 System.out.println("readOnlyList.size() : " + readOnlyList.size()); // 2
 ```
 ### 참고
-[UnmodifiableList은 만능이 아니다] (https://ecsimsw.tistory.com/entry/unmodifiableList%EC%9D%80-%EB%A7%8C%EB%8A%A5%EC%9D%B4-%EC%95%84%EB%8B%88%EB%8B%A4)
+[UnmodifiableList은 만능이 아니다](https://ecsimsw.tistory.com/entry/unmodifiableList%EC%9D%80-%EB%A7%8C%EB%8A%A5%EC%9D%B4-%EC%95%84%EB%8B%88%EB%8B%A4)
 ###
 
 ----
