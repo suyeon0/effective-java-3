@@ -3,6 +3,7 @@
 # [ITEM15] 클래스와 멤버의 접근 권한을 최소화하라
 
 ----
+`Q&A`
 ## 1. 가변객체를 참조하는 Public static final 필드
 
 > 99p) public static final 필드인데 가변객체를 참조한다면,
@@ -138,3 +139,78 @@ jre/lib/rt.jar 를 로드하는 특징과 같이 생각하면 좋을 것 같다�
 
 ### 참고
 [jdk9 모듈 설명](https://www.youtube.com/watch?v=cfs2wjfp5xE)
+
+
+----
+
+## 4. Serializable
+> 98p. private 과 package-private 멤버는 모두 해당 클래스의 구현에 해당하므로 보통은 공개 API 에 영향을 주지 않는다. 단, Serializable 을 구현한 클래스에서는 그 필드들도 의도치 않게 공개 API 가 될 수 있다
+
+### [Q]
+___
+* Serializable 이 무엇이고, 직접 관리하지 않아도 되는 이유는?
+
+### [A]
+___
+`(1) Serializable 이란?`
+* 직렬화는 객체를 데이터 스트림으로 만드는 것을 뜻하고,
+* 직렬화 가능한 객체를 만드는 방법으로 *Serializable* 이 있습니다.
+* 따라서 작성한 클래스가 파일로 저장, 읽고 쓸 수 있도록 하거나, 다른 서버로 보내거나 받고자 할 때 필요한게 Serializable 이고,
+  이를 사용하기 위해서는 Serializable 인터페이스를 구현해야 합니다.
+* Serializable 인터페이스를 구현하면 JVM에서 해당 객체는 저장하거나 다른 서버로 전송할 수 있도록 해줍니다.
+
+`(2) Serializable 을 구현한 클래스에서는 그 필드들도 의도치 않게 공개 API 가 될 수 있다 의미`
+* Serializable 인터페이스를 구현한 클래스는 모든 멤버변수가 직렬화 대상이 되기 때문입니다.
+
+  * static 은 제외
+    * 객체 직렬화는 인스턴스에 대해 적용되기 때문에 클래스 자체 정보인 static 멤버는 여기에 포함되지 않는다.
+    * Static 변수는 클래스의 모든 인스턴스에서 공유되는 하나의 필드니까!
+  * 멤버변수 중 직렬화 대상에서 제외하고 싶다면 **transient** 키워드를 사용하여 제외시킨다
+    * transient가 붙은 인스턴스 변수의 값은 그 타입의 기본값으로 직렬화된다.
+
+
+``` java
+import java.io.Serializable;
+import lombok.Getter;
+
+@Getter
+public class User implements Serializable {
+
+    private final String name;
+    private final String team;
+    private final transient int age;
+
+    public User(String name, String team, int age) {
+        this.name = name;
+        this.team = team;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "name='" + name + '\'' +
+            ", team='" + team + '\'' +
+            ", age=" + age +
+            '}';
+    }
+}
+```
+``` java
+public class Sample {
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        FileOutputStream fos = new FileOutputStream("objectfile.ser");
+        ObjectOutputStream out = new ObjectOutputStream(fos);
+        out.writeObject(new User("수연", "고도화", 30));
+
+        FileInputStream fis = new FileInputStream("objectfile.ser");
+        ObjectInputStream in = new ObjectInputStream(fis);
+        User user = (User) in.readObject();
+        System.out.println(user); // User{name='수연', team='고도화', age=0}
+    }
+}
+```
+* 참고
+  * [Java 직렬화(Serialization)란 무엇일까? :: Gyun’s 개발일지](https://devlog-wjdrbs96.tistory.com/268)
+  * [Static 사용을 피해야 하는 이유](https://kellis.tistory.com/127)
