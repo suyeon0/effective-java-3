@@ -214,3 +214,10 @@ public class Sample {
 * 참고
   * [Java 직렬화(Serialization)란 무엇일까? :: Gyun’s 개발일지](https://devlog-wjdrbs96.tistory.com/268)
   * [Static 사용을 피해야 하는 이유](https://kellis.tistory.com/127)
+###
+  `핵심정리`
+> (1) 최소한의 public API를 설계하자.
+>
+> (2) public 클래스는 상수용 public static final 필드 외에는 어떠한 public 필드도 가져서는 안된다.
+>   
+> (3) public static final 필드가 참조하는 객체가 불변인지 확인하자.
