@@ -124,12 +124,16 @@ jre/lib/rt.jar 를 로드하는 특징과 같이 생각하면 좋을 것 같다�
 
   * 자바 설치 경로의 jmods 디렉토리에 모듈 파일(.jmod) 존재하고 모듈 파일에는 자바 api 의 패키지들이 들어있다. ( /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/jmods/java.base.jmod
   : java.lang, java.util, java.io 등이 들어있음)
+  
+  <img width="700" src="https://user-images.githubusercontent.com/83405795/167402836-6c2c5dcd-728a-4e41-8cb3-8712018d358f.png">
 
 ####
 * 아래와 같이 명령어를 쳤을 때 참조하고 있는 경로가 아래와 같이 달랐다
   * `case1. Jdk11 사용`
+  <img src="https://user-images.githubusercontent.com/83405795/167402863-0d805943-3569-44a4-a564-a439a6f9105b.png">
 
   * `case2. Jdk8 사용 ` : rt.jar 참조
+  <img src="https://user-images.githubusercontent.com/83405795/167402854-a5866ef1-3c45-47a7-852c-3f4255bbcf5c.png">
 
 
 ### 참고
