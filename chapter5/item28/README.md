@@ -145,8 +145,9 @@ public class MyComparator implements Comparator {
 * 제네릭 클래스는 타입 소거의 첫번째 규칙에 의해 타입 파라미터를 Object로 교체하는데 primitive 타입은 Object의 하위 타입이 아니기 때문에 제네릭에서 사용하는 것이 불가능하다.
 
 ###
-https://jyami.tistory.com/99 
+https://jyami.tistory.com/99
 https://devlog-wjdrbs96.tistory.com/263
+https://wisdom-and-record.tistory.com/134
 
 ## 4. 제네릭의 장점
  * 객체의 타입 안정성을 높일 수 있다 (컴파일시 타입 체크)
