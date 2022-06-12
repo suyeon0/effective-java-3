@@ -40,7 +40,7 @@ static void dangerous(List<String>... stringLists) {
     String s = stringList[0].get[0]; // ClassCastException
 }
 ```
-![img.png](img.png)
+![](item32.png)
 
 * 배열 주소값을 주었기 때문. 만약, 가변인수가 아닌 List<String> stringLists 를 파라미터로 갖는 메소드였다면, Object[] objects = stringLists; 여기서 컴파일될 수가 없다.
 
