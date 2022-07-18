@@ -36,6 +36,7 @@ stream5.forEach(System.out::println); //0 2 4 6 8
 
 ---
 ## 2. java.util.stream.Collectors
+https://sabarada.tistory.com/41
 https://daddyprogrammer.org/post/1163/java-collectors/
 
 ---
