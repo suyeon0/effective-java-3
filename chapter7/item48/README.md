@@ -36,6 +36,7 @@ stream5.forEach(System.out::println); //0 2 4 6 8
 
 ---
 ## 2. java.util.stream.Collectors
+https://sabarada.tistory.com/41
 https://daddyprogrammer.org/post/1163/java-collectors/
 
 ---
@@ -43,29 +44,41 @@ https://daddyprogrammer.org/post/1163/java-collectors/
 Q. p.295 ThreadLocalRandom, SplittableRandom를 거의 써본적이 없어서 이 인스턴스의 간단한 내부구조나 차이점 같은 설명이 있으면 좋을것 같습니다!
 
 ---
-1) ThreadLocalRandom
-   java.util.Random은 멀티 쓰레드 환경에서 하나의 인스턴스에서 전역적으로 의사 난수(pseudo random)를 반환한다. 따라서 같은 시간에 동시 요청이 들어올 경우 경합 상태에서 성능에 문제가 생길 수 있다. 반면 JDK 7부터 도입된 java.util.concurrent.ThreadLocalRandom은 java.util.Random를 상속하여 멀티 쓰레드 환경에서 서로 다른 인스턴스들에 의해 의사 난수를 반환하므로 동시성 문제에 안전하다
-
-* ThreadLocalRandom vs Random
-  java.util.concurrent.ThreadLocalRandom은 똑같이 Random API의 구현체이며, java.util.Random를 상속받는다. ThreadLocalRandom은 위의 동시성 문제를 해결하기 위해 각 쓰레드마다 생성된 인스턴스에서 각각 난수를 반환한다. 따라서 Random과 같은 경합 문제가 발생하지 않아 안전하며, 성능상 이점이 있다. Random대신 ThreadLocalRandom을 쓰자.
-
--> 둘다 thread-safe 하긴 하나, Random() 은 seed 를 AutomicLong 을 사용하기 때문에 멀티 쓰레드의 요청에 대해서도 순서대로 처리하여 마치 synchronized 처리처럼 동작하기 때문에 느리다.
+### 1) ThreadLocalRandom
+- jdk 7 도입
+- ThreadLocalRandom.current() : localInit()
+- setSeed 오버라이딩 -> Random 과 다르게 seed(난수 패턴을 결정하는) 설정 불가(각 인스턴스별로 각자 seed 값을 갖기 때문)
+###
+`java.util.concurrent.ThreadLocalRandom vs java.util.Random`
+  ThreadLocalRandom은 똑같이 Random API의 구현체이며, java.util.Random를 상속받는다. ThreadLocalRandom은 위의 동시성 문제를 해결하기 위해 각 쓰레드마다 생성된 인스턴스에서 각각 난수를 반환한다. 따라서 Random과 같은 경합 문제가 발생하지 않아 안전하며, 성능상 이점이 있다. Random대신 ThreadLocalRandom을 쓰자.
+  - Q. Random : 하나의 Random 인스턴스를 공유한다면, 같은 nanoTime에 멀티 쓰레드에서 요청이 들어왔을 때 동일한 난수를 발생시키나? 
+  - A. 선형 합동 생성기 알고리즘,, 으로 동작하는데, 하나의 쓰레드가 동시 경합에서 이기면 다른 쓰레드는 자신이 이길 때까지 계속 같은 동작을 반복하며 경합한다. 그리고 여러 쓰레드의 경합-재도전 과정이 성능 이슈를 낳게 된다. (ex. 랜덤으로 할인 쿠폰 반환 이벤트)
+  
+###
+-> 둘다 thread-safe 하긴 하나, Random() 은 seed 를 AutomicLong 을 사용하기 때문에 쓰레드가 순서대로 접근해서 느리다.
 ThreadLocalRandom 은 AutomicLong 사용하지 않고 thread 별로 seed 값을 다르게 관리하기 때문에 Random 보다 멀티쓰레드에 대해 응답이 빠르면서도 쓰레드 세이프하다.
+###
 
 - AtomicLong : Long 자료형을 갖고 있는 Wrapping 클래스
   Synchronized 의 lock 을 검에 따라 발생하는 blocking 으로 발생하는 성능 이슈를 비효율성을 보완할 수 있는 방법. CAS(compare and swap) 알고리즘을 사용.
 - CAS : 현재 주어진 값(=현재 쓰레드에서의 데이터)과 실제 메모리에 저장된 데이터를 비교해서 두 개가 일치할때만 값을 업데이트
   [Java - Atomic변수](https://beomseok95.tistory.com/225)
   [Java atomic과 CAS 알고리즘](https://steady-coding.tistory.com/568)
+  https://velog.io/@sojukang/Random-%EB%8C%80%EC%8B%A0-ThreadLocalRandom%EC%9D%84-%EC%8D%A8%EC%95%BC-%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0
 
 
-2) SplittableRandom
+## 2) SplittableRandom
 * jdk8  등장.
-* 병렬처리에 특화된 random number generator
+* 병렬처리에 특화된 random number generator (-> stream.parallel() 모드 에서 사용될 때 랜덤 스트림을 생성하기 위한 추가적인 메서드들을 제공 )
 * thread-safe 하지 않음.
-* 포크조인풀이나 병렬스트림 처리를 할 때는 ThreadLocalRandom 보다도 SplittableRandom을 사용하는 것이 품질적인 측면에서 더 좋다
+* 포크조인풀이나 병렬스트림 처리를 할 때는 ThreadLocalRandom 보다도 SplittableRandom을 사용하는 것이 품질적인 측면에서 좋다
 
-new Random() 으로 쓰던걸 ThreadLocalRandom.current() 로 호출하면 된다.
+- split()
+
+
+`Fork Join Pool`
+- Java7부터 사용가능한 Java Concurrency 툴이며, 동일한 작업을 여러개의 Sub Task로 분리(Fork)하여 각각 처리하고, 이를 최종적으로 합쳐서(Join) 결과를 만들어내는 방식
+https://codechacha.com/ko/java-fork-join-pool/
 
 [Java Random - ThreadLocalRandom, SplittableRandom, SecureRandom]
 [Random 대신 ThreadLocalRandom을 써야 하는 이유](https://velog.io/@sojukang/Random-%EB%8C%80%EC%8B%A0-ThreadLocalRandom%EC%9D%84-%EC%8D%A8%EC%95%BC-%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0)(http://dveamer.github.io/backend/JavaRandom.html)
@@ -75,4 +88,7 @@ new Random() 으로 쓰던걸 ThreadLocalRandom.current() 로 호출하면 된�
 
 ---
 ## 4. 코드 수행 시간 측정 방법
+- JMH 
+: OpenJDK에서 개발한 성능 측정 툴이다. 특정 메소드의 성능을 측정하는 식으로 사용할 수 있고 실제 테스트하기전 워밍업 과정과 실제 측정 과정을 수행하는데 각 과정의 실행 수를 제어할 수 있고, 측정 후 결과로 나오는 시간의 단위를 지정하는 기능도 제공한다.
+https://javabom.tistory.com/75
 [JMH를 사용한 gradle 환경에서의 Java 코드 벤치마킹 – 최혜선 – Not First But Best](https://hyesun03.github.io/2019/08/27/how-to-benchmark-java/)
